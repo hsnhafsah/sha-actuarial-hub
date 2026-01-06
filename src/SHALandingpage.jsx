@@ -19,6 +19,7 @@ import shaLogo from "./assets/SHA_Logo2.png";
 // SHA Brand Colors
 const colors = {
     blue: "#0066B3",
+    lightblue: "#2a88cfff",
     green: "#8BC53F",
     darkBlue: "#003D6B",
     purple: "#9D4EDD",
@@ -67,6 +68,7 @@ export default function SHALandingpage() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userName, setUserName] = useState("");
     const [showAuthModal, setShowAuthModal] = useState(false);
+    const [authMode, setAuthMode] = useState('login');
     const navigate = useNavigate();
 
     // Check if user is logged in
@@ -115,7 +117,8 @@ export default function SHALandingpage() {
     const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
 
     // Show auth modal
-    const showAuth = () => {
+    const showAuth = (mode = 'login') => {
+        setAuthMode(mode); // Set the mode (login or signup)
         setShowAuthModal(true);
     };
 
@@ -154,6 +157,7 @@ export default function SHALandingpage() {
                 isOpen={showAuthModal}
                 onClose={() => setShowAuthModal(false)}
                 onAuthSuccess={handleAuthSuccess}
+                initialMode={authMode} // Pass the auth mode here
             />
 
             {/* NAVBAR - Keep original height but extend logo downwards */}
@@ -185,21 +189,19 @@ export default function SHALandingpage() {
                             <>
                                 <button
                                     onClick={goToDashboard}
-                                    className={`px-5 py-2.5 rounded-lg font-semibold transition-all duration-300 border-2 ${
-                                        isScrolled 
-                                        ? 'bg-white text-gray-800 border-gray-200 hover:bg-gray-50 hover:border-gray-300' 
+                                    className={`px-5 py-2.5 rounded-lg font-semibold transition-all duration-300 border-2 ${isScrolled
+                                        ? 'bg-white text-gray-800 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
                                         : 'bg-white/10 text-white border-white/20 hover:bg-white/20 hover:border-white/30 backdrop-blur-sm'
-                                    }`}
+                                        }`}
                                 >
                                     Dashboard
                                 </button>
                                 <button
                                     onClick={handleLogout}
-                                    className={`px-4 py-2.5 rounded-lg font-medium transition-all duration-300 flex items-center gap-2 ${
-                                        isScrolled 
-                                        ? 'text-gray-600 hover:text-red-600 hover:bg-red-50' 
+                                    className={`px-4 py-2.5 rounded-lg font-medium transition-all duration-300 flex items-center gap-2 ${isScrolled
+                                        ? 'text-gray-600 hover:text-red-600 hover:bg-red-50'
                                         : 'text-white/80 hover:text-red-400 hover:bg-white/10'
-                                    }`}
+                                        }`}
                                 >
                                     <LogOut className="w-4 h-4" />
                                     <span className="hidden sm:inline">Logout</span>
@@ -218,17 +220,17 @@ export default function SHALandingpage() {
                         ) : (
                             <>
                                 <button
-                                    onClick={showAuth}
+                                    onClick={() => showAuth('login')}  // ← Add () => and pass 'login'
                                     className={`px-5 py-2.5 rounded-full font-semibold transition-all duration-300 ${isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-white/20'
                                         }`}
                                 >
                                     Login
                                 </button>
                                 <button
-                                    onClick={showAuth}
+                                    onClick={() => showAuth('signup')}  // ← Add () => and pass 'signup'
                                     className="px-6 py-2.5 rounded-full font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
                                     style={{
-                                        background: `linear-gradient(135deg, ${colors.blue}, ${colors.green})`,
+                                        background: `linear-gradient(135deg, ${colors.lightblue}, ${colors.green})`,
                                         boxShadow: `0 4px 20px ${colors.blue}50`
                                     }}
                                 >
@@ -288,7 +290,7 @@ export default function SHALandingpage() {
                                             {slide.subtitle}
                                         </p>
                                         <button
-                                            onClick={isLoggedIn ? goToDashboard : showAuth}
+                                            onClick={isLoggedIn ? goToDashboard : () => showAuth('signup')}  // ← Change to () => showAuth('signup')
                                             className="px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-3 transition-all hover:scale-105 hover:shadow-2xl"
                                             style={{
                                                 background: colors.green,
@@ -480,7 +482,7 @@ export default function SHALandingpage() {
                                 ))}
                             </div>
                             <button
-                                onClick={isLoggedIn ? goToDashboard : showAuth}
+                                onClick={isLoggedIn ? goToDashboard : () => showAuth('signup')}  // ← Change to () => showAuth('signup')
                                 className="px-8 py-4 rounded-xl font-bold text-white text-lg flex items-center gap-3 transition-all hover:scale-105"
                                 style={{
                                     background: `linear-gradient(135deg, ${colors.cyan}, ${colors.blue})`,

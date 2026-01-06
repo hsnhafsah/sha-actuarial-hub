@@ -12,15 +12,16 @@ import {
 } from "lucide-react";
 
 const colors = {
-  blue: "#0066B3",
+  blue: "#0fa1e0ff",
   green: "#8BC53F",
-  darkBlue: "#003D6B",
+  darkgreen: "#219a27ff",
+  darkBlue: "#004e89ff",
   purple: "#9D4EDD",
   cyan: "#00D4FF"
 };
 
-export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
-  const [isLogin, setIsLogin] = useState(true);
+export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialMode = 'login' }) {
+  const [isLogin, setIsLogin] = useState(initialMode === 'login');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -34,6 +35,8 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
 
   useEffect(() => {
     if (isOpen) {
+      setIsLogin(initialMode === 'login');
+      
       setFormData({
         name: "",
         email: "",
@@ -43,7 +46,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
       setError("");
       setShowPassword(false);
     }
-  }, [isOpen]);
+  }, [isOpen, initialMode]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -102,7 +105,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
       sessionStorage.setItem("welcomeName", userData.name);
 
       setLoading(false);
-      
+
       if (onAuthSuccess) {
         onAuthSuccess(userData);
       }
@@ -116,14 +119,14 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
   return (
     <>
       {/* Backdrop */}
-      <div 
+      <div
         className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 transition-all duration-300"
         onClick={onClose}
       />
 
       {/* Modal */}
       <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
-        <div 
+        <div
           className="relative w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl animate-fade-in bg-white"
           onClick={(e) => e.stopPropagation()}
         >
@@ -141,7 +144,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
             <div className="text-center mb-6">
               <div className="inline-flex items-center gap-2 mb-2">
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center font-black text-white text-sm"
-                  style={{ 
+                  style={{
                     background: `linear-gradient(135deg, ${colors.blue}, ${colors.green})`
                   }}>
                   SHA
@@ -152,8 +155,8 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                 {isLogin ? 'Welcome back' : 'Get started'}
               </h2>
               <p className="text-xs text-gray-500">
-                {isLogin 
-                  ? 'Sign in to continue learning' 
+                {isLogin
+                  ? 'Sign in to continue learning'
                   : 'Create your free account'}
               </p>
             </div>
@@ -178,7 +181,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="Full name"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm outline-none border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl text-sm outline-none border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 text-gray-800 transition-all"
                     />
                   </div>
                 </div>
@@ -193,7 +196,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="Email address"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm outline-none border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl text-sm outline-none border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 text-gray-800 transition-all"
                   />
                 </div>
               </div>
@@ -207,7 +210,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder={isLogin ? "Password" : "Create password"}
-                    className="w-full pl-10 pr-10 py-2.5 rounded-lg text-sm outline-none border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl text-sm outline-none border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 text-gray-800 transition-all"
                   />
                   <button
                     type="button"
@@ -229,7 +232,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                       value={formData.confirmPassword}
                       onChange={handleChange}
                       placeholder="Confirm password"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm outline-none border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl text-sm outline-none border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 text-gray-800 transition-all"
                     />
                   </div>
                 </div>
@@ -241,7 +244,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                 disabled={loading}
                 className="w-full py-3 rounded-lg font-bold text-white text-sm flex items-center justify-center gap-2 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed mt-5"
                 style={{
-                  background: `linear-gradient(135deg, ${colors.blue}, ${colors.green})`
+                  background: `linear-gradient(135deg, ${colors.darkBlue}, ${colors.blue})`
                 }}
               >
                 {loading ? (
@@ -269,7 +272,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                 className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-105 bg-white text-gray-900"
                 style={{
                   border: '3px solid transparent',
-                  backgroundImage: `linear-gradient(white, white), linear-gradient(135deg, ${colors.blue}, ${colors.green})`,
+                  backgroundImage: `linear-gradient(white, white), linear-gradient(135deg, ${colors.darkgreen}, ${colors.blue})`,
                   backgroundOrigin: 'border-box',
                   backgroundClip: 'padding-box, border-box'
                 }}
